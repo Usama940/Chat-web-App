@@ -1,10 +1,10 @@
 # Backend
-/backend/node_modules/
-/backend/.env
+/Backend/node_modules/
+/Backend/.env
 
 # Frontend
-/frontend/node_modules/
-/frontend/.env
+/Forntend/node_modules/
+/Forntend/.env
 
 # Misc
 .DS_Store

@@ -1,28 +1,32 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
-export const portectRoute = async (req, res, next) => {
+export const protectRoute = async (req, res, next) => {
   try {
-    const token = req.cookie.jwt;
+    const token = req.cookies?.jwt;
 
     if (!token) {
       return res
         .status(401)
-        .json({ messege: "unauthorised -- not token provided" });
+        .json({ message: "Unauthorized -- no token provided" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     if (!decoded) {
-      return res.status(401).json({ messege: "unauthorised -- invalid token" });
+      return res.status(401).json({ message: "Unauthorized -- invalid token" });
     }
 
-    const user = await User.findById(decoded.User.Id).select("-password");
+    const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {
-      return res.status(404).json({ messege: "user not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    res.user = user;
+    req.user = user;
     next();
-  } catch (err) {}
+  } catch (err) {
+    console.error("Error in protectRoute middleware:", err);
+    res.status(500).json({ message: "Internal server error of middle were" });
+  }
 };
